@@ -224,7 +224,7 @@ public class Program
         //var json = JsonConvert.SerializeObject(board, Formatting.None);
         //Console.WriteLine(json);
 
-        Console.WriteLine(">>>>TIC TAC TOE<<<<");
+        Console.WriteLine(">>>>Let's play TIC TAC TOE type exit to quit program<<<<");
 
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine();
