@@ -62,7 +62,7 @@ namespace Inheritance
     }
     class Birds: WarmBlooded
     {
-        public bool IsBird {get; set;}
+        
     }
     class ColdBlooded : Vertebrates
     {
@@ -93,7 +93,7 @@ namespace Inheritance
     }
     class WithMoreThan3PairsOfLegs : WithJointedLegs
     {
-        publ
+        
     }
     class WithoutLegs : Invertebrates
     {
