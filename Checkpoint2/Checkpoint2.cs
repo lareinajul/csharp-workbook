@@ -6,6 +6,8 @@ namespace Checkpoint2
 {
     class Program
     {
+
+        public static string player = "White";
         static void Main(string[] args)
         {
             Game();
@@ -149,56 +151,130 @@ namespace Checkpoint2
                 }
             }
 
-            //methods
-            //CreateBoard(); //Creating the grid that is the board        
-            //DrawBoard(); //View the game board
-            //GenerateBoard(); //Creating all the Checker instances at the beginning of the game
-            //SelectChecker(); //Selecting a particular checker
-            //RemoveChecker(); //Remove a defeated checker
-            //CheckForWin(); //check if all Checkers of one color have been removed
+            private Checker SelectChecker(int row, int column)
+            {
+                var position = new int[] {row, column};
+                var checker = Checkers.Where(x => x.Position[0] == row && x.Position[1] == column).SingleOrDefault();
+                return checker;
+            }
+
+            public void MoveChecker(int selRow, int selColumn, int row, int column)
+            {
+                var checker = SelectChecker(selRow, selColumn);
+                
+                if(checker.Color == player) //Prevent player from moving other players checkers
+                {
+                    if(checker != null)
+                    {
+                        Checkers.Remove(checker);
+                        checker.Position = new int[]{row, column};    
+                        Checkers.Add(checker);            
+                    }
+                }
+                else{
+                    Console.WriteLine("Don't try to move the other players checker! Turn forfeited.");
+                }
+
+            }
+
+            public void RemoveChecker(int row, int column)
+            {
+                var checker = SelectChecker(row, column);
+                if(checker != null)
+                {
+                    Checkers.Remove(checker);
+                }
+            }
+
+            public bool CheckForWin()
+            {
+
+                if(player == "White")
+                {
+                    var blackCheckerCount = Checkers.Where(x => x.Color == "Black").Count();
+
+                    if(blackCheckerCount == 0)
+                    {
+                        return true;
+                    }
+                }
+                else{
+                    var whiteCheckerCount = Checkers.Where(x => x.Color == "White").Count();
+
+                    if(whiteCheckerCount == 0)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
         }
        
 
-        public void SelectChecker()
-        {
-            
-        }
-
-        public void RemoveChecker()
-        {
-
-        }
-
-        public void CheckForWin()
-        {
-
-        }
-
-        public bool Start(Checker white, Checker black, Board board)
-        {
-            return true;
-        }
-
         public static void Game()
-        {
-            //Build pieces
-            // var whitePiece = new Checker()
-            // {
-            //     Symbol = char.ConvertFromUtf32(int.Parse("25CB", System.Globalization.NumberStyles.HexNumber)),
-            //     Color = "White"
-
-            // };
-            // var blackPiece = new Checker()
-            // {
-            //     Symbol = char.ConvertFromUtf32(int.Parse("25CF", System.Globalization.NumberStyles.HexNumber)),
-            //     Color = "Black"
-            // };
+        {           
 
             Board board = new Board();
             board.CreateBoard();
-            board.GenerateCheckers();
-            board.PlaceCheckers();
-            board.DrawBoard();    
+            board.GenerateCheckers();            
+
+            bool winDetected = false;
+
+            while(!winDetected)
+            {
+                board.PlaceCheckers();
+                board.DrawBoard();   
+
+                Console.WriteLine("Player " + player +"'s turn" );
+
+                Console.WriteLine("move or remove checker?");
+
+                Console.WriteLine("Select a checker");
+                Console.WriteLine("Enter Row:");
+                int selRow = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter Column:");
+                int selColumn = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Select new checker location");
+                Console.WriteLine("Enter Row:");
+                int row = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter Column:");
+                int column = Convert.ToInt32(Console.ReadLine());
+
+                board.MoveChecker(selRow, selColumn, row, column);
+
+                    Console.WriteLine("Remove checker? y/n");
+                    var userAction = Console.ReadLine().ToLower();
+                    
+                    if(userAction == "y")
+                    {
+                        Console.WriteLine("Select checker to remove");
+                        Console.WriteLine("Enter Row:");
+                        row = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Enter Column:");
+                        column = Convert.ToInt32(Console.ReadLine());
+
+                        board.RemoveChecker(row, column);
+                    }
+
+                winDetected = board.CheckForWin();
+                
+                if(!winDetected)
+                {
+                    if(player == "White")
+                    {
+                        player = "Black";
+                    }
+                    else{
+                        player = "White";
+                    }
+
+                    board.CreateBoard();
+
+                }
+
+            }
+
         }
     }
 }
