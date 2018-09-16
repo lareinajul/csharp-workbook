@@ -62,7 +62,7 @@ namespace WordGuess
                         int guessCount = 1;
                         foreach(var item in guessList)
                         {
-                            Console.WriteLine(guessCount + ". " + item); 
+                             Console.WriteLine(guessCount + ". " + item); 
                             guessCount++;                       
                         }
 
